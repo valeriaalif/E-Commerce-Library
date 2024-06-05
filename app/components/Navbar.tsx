@@ -1,7 +1,56 @@
-import React from "react";
-import Link from "next/link";
+'use client';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import {jwtDecode} from 'jwt-decode';
+import axios from 'axios';
+import {useRouter} from 'next/navigation';
 
 const Navbar = () => {
+  const router = useRouter(); // Add router to use for redirection
+  // Define the user roles
+  const USER_ROLES = {
+    UNVERIFIED: 'Unverified',
+    USER: 'User',
+    ADMIN: 'Admin',
+    SUPERADMIN: 'SuperAdmin',
+  };
+
+  // Initialize the state to store the user role
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+
+  // Fetch user role using token
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = sessionStorage.getItem('token');
+      if (token) {
+        try {
+          // Decode the token to get the userRole
+          const decodedToken: { userRole: string, userName: string } = jwtDecode(token);
+          console.log('Decoded Token:', decodedToken);
+          setUserName(decodedToken.userName);
+          setUserRole(decodedToken.userRole);
+        } catch (error) {
+          console.error('Failed to decode token:', error);
+          setUserRole(USER_ROLES.UNVERIFIED); // In case of error, set as unverified user
+        }
+      } else {
+        setUserRole(USER_ROLES.UNVERIFIED); // If no token, set as unverified user
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleLogout = async () => {
+    // Clear the token from sessionStorage
+    sessionStorage.removeItem('token');
+    // Redirect to login or home page
+    await router.replace("/");
+    window.location.reload();
+  };
+   
+
   return (
     <div className="navbar bg-base-100">
       <div className="navbar-start">
@@ -29,6 +78,7 @@ const Navbar = () => {
             <li>
               <Link href="/">Inicio</Link>
             </li>
+            
             <li>
               <a>Libros</a>
               <ul className="p-2">
@@ -44,23 +94,23 @@ const Navbar = () => {
               </ul>
             </li>
             <li>
-            <a>Regalos</a>
+              <a>Regalos</a>
               <ul className="p-2">
                 <li>
                   <a>Agendas</a>
                 </li>
                 <li>
-                  <a>Accesortios</a>x
+                  <a>Accesorios</a>
                 </li>
                 <li>
                   <a>Hogar</a>
-                </li>
-                </ul>
+                </li>   
+              
+              </ul>
             </li>
             <li>
               <Link href="/">Juguetes</Link>
             </li>
-
             {/* cart menu responsive view*/}
             <div
               tabIndex={0}
@@ -101,19 +151,21 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="w-20 rounded-full">
-        <img src="/assets/LM-Logo.png" alt="My Image" />
+          <img src="/assets/LM-Logo.png" alt="My Image" />
         </div>
       </div>
-
+       {/* WEB NAVBAR*/}
       <div className="navbar-center hidden lg:flex flex-row">
+      { userRole !== USER_ROLES.ADMIN &&(
+            <>
         <ul className="menu menu-horizontal px-30 ">
-          <li>
-            <Link href="/">Inicio</Link>
-          </li>
-          <li>
-            <details>
-              <summary>Libros</summary>
-              <ul
+        <li>
+          <Link href="/">Inicio</Link>
+        </li>
+        <li>
+          <details>
+            <summary>Libros</summary>
+            <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
@@ -130,20 +182,17 @@ const Navbar = () => {
                 <a>Historia</a>
               </li>
             </ul>
-          
-            </details>
-          </li>
-          <li>
-            <details>
-              <summary>Regalos</summary>
-              <ul
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary>Regalos</summary>
+            <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-              <Link href="/containers">
-                  Agendas
-                </Link>
+                <Link href="/containers">Agendas</Link>
               </li>
               <li>
                 <a>Accesorios</a>
@@ -152,24 +201,100 @@ const Navbar = () => {
                 <a>Hogar</a>
               </li>
             </ul>
-            </details>
-          </li>
-          <li>
-            <a>Juguetes</a>
-          </li>
+          </details>
+        </li>
+        <li>
+          <a>Juguetes</a>
+        </li>
         </ul>
-      </div>
+        </>
+      )}
 
-      <div className="navbar-end  hidden lg:flex flex-row">
-      <div className="flex flex-wrap">
-          <div className=" form-control ">
+       {/* ONLY ADMINS NAVBAR!!! */}
+      { userRole == USER_ROLES.ADMIN &&(
+            <>
+        <ul className="menu menu-horizontal px-30 ">
+        <li>
+          <Link href="/">Inicio</Link>
+        </li>
+        <li>
+          <details>
+            <summary>Libros</summary>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <a className="justify-between">
+                  Ciencia Ficción
+                  <span className="badge">Nuevo</span>
+                </a>
+              </li>
+              <li>
+                <a>Novela Literaria</a>
+              </li>
+              <li>
+                <a>Historia</a>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary>Gestionar</summary>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <Link href="/containers">Agendas</Link>
+              </li>
+              <li>
+                <a>Accesorios</a>
+              </li>
+              <li>
+                <a>Hogar</a>
+              </li>
+            </ul>
+          </details>
+        </li>
+        <li>
+          <a>Usuarios</a>
+        </li>
+        </ul>
+        </>
+      )}
+      </div>
+      
+      <div className="navbar-end hidden lg:flex flex-row">
+        <div className="flex flex-wrap">
+        {userRole !== USER_ROLES.USER && userRole !== USER_ROLES.ADMIN &&(
+            <>
+              <div className="mr-4">
+                <Link href="/auth/login">
+                  <button className="btn bg-custom-color-50 hover:bg-custom-color-100 text-white btn-md">Inicia Sesión</button>
+                </Link>
+              </div>
+              
+              <div className="mr-4">
+                <Link href="/auth/register">
+                  <button className="btn bg-custom-color-50 hover:bg-custom-color-100 text-white btn-md">Regístrate</button>
+                </Link>
+              </div>
+            </>
+          )}
+
+          {/* VERIFIED USER NAVBAR */}
+          {(userRole === USER_ROLES.USER || userRole === USER_ROLES.ADMIN) &&(
+          <>
+          <div className="form-control">
             <input
               type="text"
               placeholder="Buscar"
               className="input input-bordered w-24 md:w-auto"
             />
           </div>
-
+        
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
@@ -225,9 +350,9 @@ const Navbar = () => {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
             >
-              <li>
+               <li>
               <Link href="/auth/login">
                   Iniciar Sesión
                 </Link>
@@ -238,15 +363,19 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <a>Logout</a>
+              <button onClick={handleLogout}>Logout</button>
               </li>
             </ul>
           </div>
+          </>
+          )}
         </div>
-      </div>
-    </div>
     
+      </div>
+      
+    </div>
   );
 };
 
 export default Navbar;
+

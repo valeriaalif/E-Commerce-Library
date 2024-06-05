@@ -31,7 +31,8 @@ const Login = () => {
 
       // Save JWT token to sessionStorage
       sessionStorage.setItem('token', response.data.token);
-
+      console.log('Token Succes', response.data.token);
+      
       // Redirect to home page
       router.push('/');
     } catch (error: unknown) {
