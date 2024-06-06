@@ -52,7 +52,9 @@ const Navbar = () => {
    
 
   return (
+    
     <div className="navbar bg-base-100">
+           {/* MOBILE NAVBAR*/}
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -111,7 +113,6 @@ const Navbar = () => {
             <li>
               <Link href="/">Juguetes</Link>
             </li>
-            {/* cart menu responsive view*/}
             <div
               tabIndex={0}
               role="button"
@@ -135,7 +136,6 @@ const Navbar = () => {
                 <span className="badge badge-sm indicator-item">8</span>
               </div>
             </div>
-            {/* profile menu responsive view*/}
             <div
               tabIndex={0}
               role="button"
@@ -154,9 +154,12 @@ const Navbar = () => {
           <img src="/assets/LM-Logo.png" alt="My Image" />
         </div>
       </div>
+
+
        {/* WEB NAVBAR*/}
       <div className="navbar-center hidden lg:flex flex-row">
-      { userRole !== USER_ROLES.ADMIN &&(
+             {/* UNVERIFIED USER NAVBAR LINKS*/}
+      { userRole !== USER_ROLES.USER && userRole !== USER_ROLES.ADMIN &&(
             <>
         <ul className="menu menu-horizontal px-30 ">
         <li>
@@ -204,16 +207,17 @@ const Navbar = () => {
           </details>
         </li>
         <li>
-          <a>Juguetes</a>
-        </li>
+         <a>Juguetes</a>
+          </li>
         </ul>
         </>
       )}
-
-       {/* ONLY ADMINS NAVBAR!!! */}
-      { userRole == USER_ROLES.ADMIN &&(
-            <>
-        <ul className="menu menu-horizontal px-30 ">
+       
+         {/* VERIFIED USER NAVBAR LINKS*/}
+       
+       {(userRole === USER_ROLES.USER ) &&(
+          <>
+            <ul className="menu menu-horizontal px-30 ">
         <li>
           <Link href="/">Inicio</Link>
         </li>
@@ -241,7 +245,7 @@ const Navbar = () => {
         </li>
         <li>
           <details>
-            <summary>Gestionar</summary>
+            <summary>Regalos</summary>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
@@ -256,10 +260,64 @@ const Navbar = () => {
                 <a>Hogar</a>
               </li>
             </ul>
+            </details>
+        </li>
+        <li>
+          <a>Promoción</a>
+        </li>
+        </ul>
+        </> 
+        )}
+
+       {/* ONLY ADMINS NAVBAR LINKS!!! */}
+      { userRole == USER_ROLES.ADMIN &&(
+            <>
+        <ul className="menu menu-horizontal px-30 ">
+        <li>
+          <Link href="/">Inicio</Link>
+        </li>
+        <li>
+          <a>Panel</a>
+        </li>
+        <li>
+          <details>
+            <summary>Productos</summary>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <a className="justify-between">
+                  Libros
+                </a>
+              </li>
+              <li>
+                <a>Regalos</a>
+              </li>
+              <li>
+                <a>Accesorios</a>
+              </li>
+            </ul>
           </details>
         </li>
         <li>
-          <a>Usuarios</a>
+          <details>
+            <summary>Admin</summary>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            >
+              <li>
+                <Link href="/containers">Promos</Link>
+              </li>
+              <li>
+                <a>Usuarios</a>
+              </li>
+              <li>
+                <a>Objetos Varios</a>
+              </li>
+            </ul>
+          </details>
         </li>
         </ul>
         </>
@@ -268,6 +326,7 @@ const Navbar = () => {
       
       <div className="navbar-end hidden lg:flex flex-row">
         <div className="flex flex-wrap">
+             {/* UNVERIFIED USER NAVBAR BUTTONS*/}
         {userRole !== USER_ROLES.USER && userRole !== USER_ROLES.ADMIN &&(
             <>
               <div className="mr-4">
@@ -284,8 +343,8 @@ const Navbar = () => {
             </>
           )}
 
-          {/* VERIFIED USER NAVBAR */}
-          {(userRole === USER_ROLES.USER || userRole === USER_ROLES.ADMIN) &&(
+          {/* VERIFIED USER NAVBAR BUTTONS */}
+          {(userRole === USER_ROLES.USER ) &&(
           <>
           <div className="form-control">
             <input
@@ -340,7 +399,6 @@ const Navbar = () => {
               role="button"
               className="btn btn-ghost btn-circle avatar"
             >
-              {/* profile menu web view navbar*/}
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component"
@@ -354,23 +412,69 @@ const Navbar = () => {
             >
                <li>
               <Link href="/auth/login">
-                  Iniciar Sesión
+                  Perfil
                 </Link>
               </li>
               <li>
               <Link href="/auth/register">
-                  Registrarse
+                  Ajustes
                 </Link>
               </li>
               <li>
-              <button onClick={handleLogout}>Logout</button>
+              <button onClick={handleLogout}>Cerrar Sesión</button>
               </li>
             </ul>
           </div>
           </>
           )}
         </div>
-    
+       
+        {/* ONLY ADMINS NAVBAR BUTTONS!!! */}
+        {(userRole === USER_ROLES.ADMIN) &&(
+          <>
+            <div className="form-control">
+            <input
+              type="text"
+              placeholder="Buscar"
+              className="input input-bordered w-24 md:w-auto"
+            />
+          </div>
+        
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                />
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+            >
+               <li>
+              <Link href="/auth/login">
+                 Perfil
+                </Link>
+              </li>
+              <li>
+              <Link href="/auth/register">
+                  Ajustes
+                </Link>
+              </li>
+              <li>
+              <button onClick={handleLogout}>Cerrar Sesión</button>
+              </li>
+            </ul>
+          </div>
+
+          </>
+        )}
       </div>
       
     </div>
