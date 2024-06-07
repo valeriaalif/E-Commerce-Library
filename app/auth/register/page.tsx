@@ -1,6 +1,72 @@
-import React from "react";
+'use client';
+
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Register = () => {
+
+  const [name, setName] = useState('');
+  const [lastname, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
+
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setLastName(e.target.value);
+  };
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match');
+      return;
+    }
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      console.log('API URL:', apiUrl);
+
+      const response = await axios.post(`${apiUrl}/api/auth/RegisterAccount`, {
+        userName: name,
+        userLastName: lastname,
+        userEmail: email,
+        userPassword: password,
+      });
+      console.log('Register successful:', response.data);
+
+      // Save JWT token to sessionStorage
+      sessionStorage.setItem('token', response.data.token);
+      
+      router.push('/');
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('Registration failed:', error.response ? error.response.data : 'No response from server');
+      } else {
+        console.error('An unexpected error occurred:', error);
+      }
+    }
+  };
+
+
   return (
     <section className="bg-white">
       <div className="lg:grid lg:min-h-screen lg:grid-cols-12">
@@ -69,7 +135,10 @@ const Register = () => {
               </p>
             </div>
 
-            <form action="#" className="mt-8 grid grid-cols-6 gap-6">
+            
+       {/* FORM START*/}
+
+            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
             <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="FirstName"
@@ -77,13 +146,12 @@ const Register = () => {
                 >
                   First Name
                 </label>
-                <label htmlFor="FirstName" className="sr-only">
-                  First Name
-                </label>
 
                 <div className="relative">
                   <input
                     type="FirstName"
+                    value={name}
+                    onChange={handleNameChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Enter First Name"
                   />
@@ -97,19 +165,18 @@ const Register = () => {
                 >
                   Last Name
                 </label>
-                <label htmlFor="LastName" className="sr-only">
-                  Last Name
-                </label>
 
                 <div className="relative">
                   <input
                     type="LastName"
+                    value={lastname}
+                    onChange={handleLastNameChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Enter Last Name"
                   />
                 </div>
               </div>
-              {/* form reference*/}
+         
               <div className="col-span-6">
                 <label
                   htmlFor="Email"
@@ -117,15 +184,15 @@ const Register = () => {
                 >
                   Email
                 </label>
-                <label htmlFor="email" className="sr-only">
-                  Email
-                </label>
+             
 
                 <div className="relative">
                   <input
                     type="email"
+                    value={email}
+                    onChange={handleEmailChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
-                    placeholder="Enter Email"
+                    placeholder="Enter email"
                   />
                 </div>
               </div>
@@ -137,13 +204,12 @@ const Register = () => {
                 >
                   Password
                 </label>
-                <label htmlFor="password" className="sr-only">
-                  Password
-                </label>
 
                 <div className="relative">
                   <input
                     type="password"
+                    value={password}
+                    onChange={handlePasswordChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Enter Password"
                   />
@@ -158,20 +224,19 @@ const Register = () => {
                 >
                  Confirm Password
                 </label>
-                <label htmlFor="ConfirmPassword" className="sr-only">
-                   Confirm Password
-                </label>
-
                 <div className="relative">
                   <input
                     type="password"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Confirm Password"
                   />
                 </div>
-              </div>
-
-
+              </div>             
+              {errorMessage && (
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
               <div className="col-span-6">
                 <label htmlFor="MarketingAccept" className="flex gap-4">
                   <input
@@ -206,15 +271,14 @@ const Register = () => {
               </div>
 
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
+                <button type="submit" className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
                   Create an account
                 </button>
-
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                   Already have an account?
-                  <a href="#" className="text-gray-700 underline">
-                    Log in
-                  </a>
+                  <Link href="/auth/login" className="text-gray-700 underline">
+                  Log In
+                </Link>
                   .
                 </p>
               </div>
