@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Button from './components/Button';
 import Navbar from './components/Navbar';
 import Carousel from './components/Carousel';
 import Header from './containers/Header/Header';

@@ -13,6 +13,9 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+
+  const [emailExists, setEmailExists] = useState(false);
   const router = useRouter();
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,8 +26,38 @@ const Register = () => {
     setLastName(e.target.value);
   };
 
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+  const handleEmailChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const emailValue = e.target.value;
+    setEmail(emailValue);
+    setErrorMessage('');
+
+    // Check if email already exists
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const response = await axios.get(`${apiUrl}/api/users/getUserByEmail`, {
+          params: { userEmail: emailValue }
+      });
+      
+      if (response.data) {
+          setEmailExists(true);
+          setErrorMessage('Este correo ya existe');
+      } else {
+          setEmailExists(false);
+      }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 404) {
+            // User not found
+            setEmailExists(false);
+        } else {
+            console.error('Error checking email:', error);
+            setErrorMessage('An error occurred while checking the email');
+        }
+    } else {
+        console.error('Unexpected error:', error);
+        setErrorMessage('An unexpected error occurred');
+    }
+  }
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +71,11 @@ const Register = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match');
+      setPasswordErrorMessage('Las contraseñas no son iguales');
+      return;
+    }
+    if (emailExists) {
+      setErrorMessage('Este correo ya existe');
       return;
     }
     try {
@@ -194,6 +231,9 @@ const Register = () => {
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Enter email"
                   />
+                      {errorMessage && (
+            <p className="text-red-500 text-sm">{errorMessage}</p>
+          )}
                 </div>
               </div>
 
@@ -232,11 +272,12 @@ const Register = () => {
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Confirm Password"
                   />
+                           {passwordErrorMessage && (
+            <p className="text-red-500 text-sm">{passwordErrorMessage}</p>
+          )}
                 </div>
               </div>             
-              {errorMessage && (
-            <p className="text-red-500 text-sm">{errorMessage}</p>
-          )}
+         
               <div className="col-span-6">
                 <label htmlFor="MarketingAccept" className="flex gap-4">
                   <input
