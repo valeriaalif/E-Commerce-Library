@@ -78,20 +78,20 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link href="/">Inicio</Link>
+              <Link href="/">Home</Link>
             </li>
             
             <li>
-              <a>Libros</a>
+              <a>Books</a>
               <ul className="p-2">
                 <li>
-                  <a>Ciencia Ficción</a>
+                  <a>Science Fiction</a>
                 </li>
                 <li>
-                  <a>Novela Literaria</a>
+                  <a>Novel</a>
                 </li>
                 <li>
-                  <a>Historia</a>
+                  <a>History</a>
                 </li>
               </ul>
             </li>
@@ -163,33 +163,33 @@ const Navbar = () => {
             <>
         <ul className="menu menu-horizontal px-30 ">
         <li>
-          <Link href="/">Inicio</Link>
+          <Link href="/">Home</Link>
         </li>
         <li>
           <details>
-            <summary>Libros</summary>
+            <summary>Books</summary>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
                 <a className="justify-between">
-                  Ciencia Ficción
+                  Science Fiction
                   <span className="badge">Nuevo</span>
                 </a>
               </li>
               <li>
-                <a>Novela Literaria</a>
+                <a>Romance</a>
               </li>
               <li>
-                <a>Historia</a>
+                <a>History</a>
               </li>
             </ul>
           </details>
         </li>
         <li>
           <details>
-            <summary>Regalos</summary>
+            <summary>Gift Shop</summary>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
@@ -198,16 +198,16 @@ const Navbar = () => {
                 <Link href="/containers">Agendas</Link>
               </li>
               <li>
-                <a>Accesorios</a>
+                <a>Accesories</a>
               </li>
               <li>
-                <a>Hogar</a>
+                <a>Furniture</a>
               </li>
             </ul>
           </details>
         </li>
         <li>
-         <a>Juguetes</a>
+         <a>Toys</a>
           </li>
         </ul>
         </>
@@ -219,33 +219,33 @@ const Navbar = () => {
           <>
             <ul className="menu menu-horizontal px-30 ">
         <li>
-          <Link href="/">Inicio</Link>
+          <Link href="/">Home</Link>
         </li>
         <li>
           <details>
-            <summary>Libros</summary>
+            <summary>Books</summary>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
                 <a className="justify-between">
-                  Ciencia Ficción
+                  Science Fiction
                   <span className="badge">Nuevo</span>
                 </a>
               </li>
               <li>
-                <a>Novela Literaria</a>
+                <a>Novel</a>
               </li>
               <li>
-                <a>Historia</a>
+                <a>History</a>
               </li>
             </ul>
           </details>
         </li>
         <li>
           <details>
-            <summary>Regalos</summary>
+            <summary>Gift Shop</summary>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
@@ -254,16 +254,16 @@ const Navbar = () => {
                 <Link href="/containers">Agendas</Link>
               </li>
               <li>
-                <a>Accesorios</a>
+                <a>Accesories</a>
               </li>
               <li>
-                <a>Hogar</a>
+                <a>Furniture</a>
               </li>
             </ul>
             </details>
         </li>
         <li>
-          <a>Promoción</a>
+          <a>Offers</a>
         </li>
         </ul>
         </> 
@@ -274,28 +274,28 @@ const Navbar = () => {
             <>
         <ul className="menu menu-horizontal px-30 ">
         <li>
-          <Link href="/">Inicio</Link>
+          <Link href="/">Home</Link>
         </li>
         <li>
-          <a>Panel</a>
+          <a>Dashboard</a>
         </li>
         <li>
           <details>
-            <summary>Productos</summary>
+            <summary>Products</summary>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
                 <a className="justify-between">
-                  Libros
+                  Books
                 </a>
               </li>
               <li>
-                <a>Regalos</a>
+                <a>Gifts</a>
               </li>
               <li>
-                <a>Accesorios</a>
+                <a>Accesories</a>
               </li>
             </ul>
           </details>
@@ -308,13 +308,13 @@ const Navbar = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <Link href="/containers">Promos</Link>
+                <Link href="/containers">Offers</Link>
               </li>
               <li>
-                <a>Usuarios</a>
+                <a>Users</a>
               </li>
               <li>
-                <a>Objetos Varios</a>
+                <a>Decor</a>
               </li>
             </ul>
           </details>
@@ -331,13 +331,13 @@ const Navbar = () => {
             <>
               <div className="mr-4">
                 <Link href="/auth/login">
-                  <button className="btn bg-custom-color-50 hover:bg-custom-color-100 text-white btn-md">Inicia Sesión</button>
+                  <button className="btn bg-custom-color-50 hover:bg-custom-color-100 text-white btn-md">Sign In</button>
                 </Link>
               </div>
               
               <div className="mr-4">
                 <Link href="/auth/register">
-                  <button className="btn bg-custom-color-50 hover:bg-custom-color-100 text-white btn-md">Regístrate</button>
+                  <button className="btn bg-custom-color-50 hover:bg-custom-color-100 text-white btn-md">Sign Up</button>
                 </Link>
               </div>
             </>
@@ -412,16 +412,16 @@ const Navbar = () => {
             >
                <li>
               <Link href="/auth/login">
-                  Perfil
+                  Profile
                 </Link>
               </li>
               <li>
               <Link href="/auth/register">
-                  Ajustes
+                  Settings
                 </Link>
               </li>
               <li>
-              <button onClick={handleLogout}>Cerrar Sesión</button>
+              <button onClick={handleLogout}>Logout</button>
               </li>
             </ul>
           </div>
@@ -459,16 +459,16 @@ const Navbar = () => {
             >
                <li>
               <Link href="/auth/login">
-                 Perfil
+                 Profile
                 </Link>
               </li>
               <li>
               <Link href="/auth/register">
-                  Ajustes
+                  Settings
                 </Link>
               </li>
               <li>
-              <button onClick={handleLogout}>Cerrar Sesión</button>
+              <button onClick={handleLogout}>Logout</button>
               </li>
             </ul>
           </div>

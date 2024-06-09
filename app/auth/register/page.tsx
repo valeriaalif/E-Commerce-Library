@@ -110,7 +110,7 @@ const Register = () => {
         <section className="relative flex h-32 items-end bg-gray-900 lg:col-span-5 lg:h-full xl:col-span-6">
           <img
             alt=""
-            src="https://images.unsplash.com/photo-1617195737496-bc30194e3a19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+            src="/assets/register.jpg"
             className="absolute inset-0 h-full w-full object-cover opacity-80"
           />
 
@@ -131,12 +131,11 @@ const Register = () => {
             </a>
 
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              Welcome to Squid
+              Welcome to the Book Club!
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-              nam dolorum aliquam, quibusdam aperiam voluptatum.
+              A new adventure is waiting for you. Join the Book Club and connect with our community.
             </p>
           </div>
         </section>
@@ -296,12 +295,12 @@ const Register = () => {
 
               <div className="col-span-6">
                 <p className="text-sm text-gray-500">
-                  By creating an account, you agree to our
+                  By creating an account, you agree to our&nbsp;
                   <a href="#" className="text-gray-700 underline">
                     {" "}
                     terms and conditions{" "}
                   </a>
-                  and
+                  and&nbsp;
                   
                   <a href="#" className="text-gray-700 underline">
                     privacy policy
@@ -316,7 +315,7 @@ const Register = () => {
                   Create an account
                 </button>
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
-                  Already have an account?
+                  Already have an account?&nbsp;
                   <Link href="/auth/login" className="text-gray-700 underline">
                   Log In
                 </Link>

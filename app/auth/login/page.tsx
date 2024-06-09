@@ -3,10 +3,12 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -15,6 +17,10 @@ const Login = () => {
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -48,9 +54,9 @@ const Login = () => {
     <section className="relative flex flex-wrap lg:h-screen lg:items-center">
       <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-lg text-center">
-          <h1 className="text-2xl font-bold sm:text-3xl">Get started today!</h1>
+          <h1 className="text-2xl font-bold sm:text-3xl">Welcome Back!</h1>
           <p className="mt-4 text-gray-500">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Et libero nulla eaque error neque ipsa culpa autem, at itaque nostrum!
+            Your next reading is waiting for you. We embrace the reading culture. Let's dive in a sea of books.
           </p>
         </div>
         <form onSubmit={handleSubmit} className="mx-auto mb-0 mt-8 max-w-md space-y-4">
@@ -86,13 +92,14 @@ const Login = () => {
             <label htmlFor="password" className="sr-only">Password</label>
             <div className="relative">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={handlePasswordChange}
                 className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
                 placeholder="Enter password"
               />
-              <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
+              <span className="absolute inset-y-0 end-0 grid place-content-center px-4 cursor-pointer"
+               onClick={handleTogglePassword}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="size-4 text-gray-400"
@@ -117,9 +124,11 @@ const Login = () => {
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500">
-              No account?
-              <a className="underline" href="#">Sign up</a>
+          <div className="text-sm text-gray-500">
+              No Account?&nbsp;
+              <Link href="/auth/register" className="text-gray-700 underline">
+                  Sign Up
+                </Link>
             </div>
             <button
               type="submit"
@@ -133,7 +142,7 @@ const Login = () => {
       <div className="relative h-64 w-full sm:h-96 lg:h-full lg:w-1/2">
         <img
           alt=""
-          src="https://images.unsplash.com/photo-1630450202872-e0829c9d6172?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+          src="/assets/Login.png"
           className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
