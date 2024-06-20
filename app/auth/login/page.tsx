@@ -27,7 +27,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      console.log('API URL:', apiUrl);
+      
 
       const response = await axios.post(`${apiUrl}/api/auth/login`, {
         userEmail: email,

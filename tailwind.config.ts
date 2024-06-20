@@ -19,7 +19,8 @@ const config: Config = {
       colors: {
         'custom-color': {
           50: '#9f624f',    //dark brown
-          100: '#cca98d' //light brown
+          100: '#cca98d', //light brown
+          200: '#d19d5e' //burnt orange
         },
       },
     },

@@ -1,22 +1,30 @@
-'use client';
+"use client";
 
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import React, { useState, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const Register = () => {
-
-  const [name, setName] = useState('');
-  const [lastname, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [name, setName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [validatepasswordErrorMessage, setvalidatePasswordErrorMessage] =
+    useState("");
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
   const [emailExists, setEmailExists] = useState(false);
   const router = useRouter();
+
+  const validatePassword = (password: string): boolean => {
+    const passwordRegex = /^(?=.*[!@#$%^&*])(?=.{9,})/;
+    return passwordRegex.test(password);
+  };
 
   const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -26,83 +34,107 @@ const Register = () => {
     setLastName(e.target.value);
   };
 
+  const handleNicknameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+
   const handleEmailChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const emailValue = e.target.value;
     setEmail(emailValue);
-    setErrorMessage('');
+    setErrorMessage("");
 
     // Check if email already exists
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       const response = await axios.get(`${apiUrl}/api/users/getUserByEmail`, {
-          params: { userEmail: emailValue }
+        params: { userEmail: emailValue },
       });
-      
+
       if (response.data) {
-          setEmailExists(true);
-          setErrorMessage('Este correo ya existe');
+        setEmailExists(true);
+        setErrorMessage("This email already exists");
       } else {
-          setEmailExists(false);
+        setEmailExists(false);
       }
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
         if (error.response && error.response.status === 404) {
-            // User not found
-            setEmailExists(false);
+          // User not found
+          setEmailExists(false);
         } else {
-            console.error('Error checking email:', error);
-            setErrorMessage('An error occurred while checking the email');
+          console.error("Error checking email:", error);
+          setErrorMessage("An error occurred while checking the email");
         }
-    } else {
-        console.error('Unexpected error:', error);
-        setErrorMessage('An unexpected error occurred');
+      } else {
+        console.error("Unexpected error:", error);
+        setErrorMessage("An unexpected error occurred");
+      }
     }
-  }
   };
 
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
+    const passwordValue = e.target.value;
+    setPassword(passwordValue);
+    if (!validatePassword(passwordValue)) {
+      setvalidatePasswordErrorMessage(
+        "Password must at least have a minimum of 9 characters incluing special characters."
+      );
+    } else {
+      setvalidatePasswordErrorMessage("");
+    }
   };
 
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
   };
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      setPasswordErrorMessage('Las contraseñas no son iguales');
+      setPasswordErrorMessage("Passwords doesnt match");
+      return;
+    }
+    if (!validatePassword(password)) {
+      setPasswordErrorMessage(
+        "Password must at least have a minimun of 9 characters incluing special characters."
+      );
       return;
     }
     if (emailExists) {
-      setErrorMessage('Este correo ya existe');
+      setErrorMessage("This email already exists");
       return;
     }
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-      console.log('API URL:', apiUrl);
+      console.log("API URL:", apiUrl);
 
       const response = await axios.post(`${apiUrl}/api/auth/RegisterAccount`, {
         userName: name,
         userLastName: lastname,
+        userNickname: nickname,
         userEmail: email,
         userPassword: password,
       });
-      console.log('Register successful:', response.data);
+      console.log("Register successful:", response.data);
 
       // Save JWT token to sessionStorage
-      sessionStorage.setItem('token', response.data.token);
-      
-      router.push('/');
+      sessionStorage.setItem("token", response.data.token);
+
+      router.push("/");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error('Registration failed:', error.response ? error.response.data : 'No response from server');
+        console.error(
+          "Registration failed:",
+          error.response ? error.response.data : "No response from server"
+        );
       } else {
-        console.error('An unexpected error occurred:', error);
+        console.error("An unexpected error occurred:", error);
       }
     }
   };
-
 
   return (
     <section className="bg-white">
@@ -135,7 +167,8 @@ const Register = () => {
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              A new adventure is waiting for you. Join the Book Club and connect with our community.
+              A new adventure is waiting for you. Join the Book Club and connect
+              with our community.
             </p>
           </div>
         </section>
@@ -171,11 +204,13 @@ const Register = () => {
               </p>
             </div>
 
-            
-       {/* FORM START*/}
+            {/* FORM START*/}
 
-            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6">
-            <div className="col-span-6 sm:col-span-3">
+            <form
+              onSubmit={handleSubmit}
+              className="mt-8 grid grid-cols-6 gap-6"
+            >
+              <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="FirstName"
                   className="block text-sm font-medium text-gray-700"
@@ -212,15 +247,14 @@ const Register = () => {
                   />
                 </div>
               </div>
-         
-              <div className="col-span-6">
+
+              <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="Email"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Email
                 </label>
-             
 
                 <div className="relative">
                   <input
@@ -230,9 +264,28 @@ const Register = () => {
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Enter email"
                   />
-                      {errorMessage && (
-            <p className="text-red-500 text-sm">{errorMessage}</p>
-          )}
+                  {errorMessage && (
+                    <p className="text-red-500 text-sm">{errorMessage}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="col-span-6 sm:col-span-3">
+                <label
+                  htmlFor="UserNickname"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Nickname
+                </label>
+
+                <div className="relative">
+                  <input
+                    type="userNickname"
+                    value={nickname}
+                    onChange={handleNicknameChange}
+                    className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
+                    placeholder="Enter Password"
+                  />
                 </div>
               </div>
 
@@ -246,37 +299,70 @@ const Register = () => {
 
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={handlePasswordChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Enter Password"
                   />
+                  <span
+                    className="absolute inset-y-0 end-0 grid place-content-center px-4 cursor-pointer"
+                    onClick={handleTogglePassword}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="size-4 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  </span>
+               
                 </div>
+                {validatepasswordErrorMessage && (
+                    <p className="text-red-200 text-sm">
+                      {validatepasswordErrorMessage}
+                    </p>
+                  )}
               </div>
 
-          
               <div className="col-span-6 sm:col-span-3">
                 <label
                   htmlFor="ConfirmPassword"
                   className="block text-sm font-medium text-gray-700"
                 >
-                 Confirm Password
+                  Confirm Password
                 </label>
                 <div className="relative">
                   <input
-                    type="password"
+                    type= "password"
                     value={confirmPassword}
                     onChange={handleConfirmPasswordChange}
                     className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm drop-shadow-2xl"
                     placeholder="Confirm Password"
                   />
-                           {passwordErrorMessage && (
-            <p className="text-red-500 text-sm">{passwordErrorMessage}</p>
-          )}
+                
+                  {passwordErrorMessage && (
+                    <p className="text-red-500 text-sm">
+                      {passwordErrorMessage}
+                    </p>
+                  )}
                 </div>
-              </div>             
-         
+              </div>
+
               <div className="col-span-6">
                 <label htmlFor="MarketingAccept" className="flex gap-4">
                   <input
@@ -301,24 +387,25 @@ const Register = () => {
                     terms and conditions{" "}
                   </a>
                   and&nbsp;
-                  
                   <a href="#" className="text-gray-700 underline">
                     privacy policy
                   </a>
                   .
-                  </p>
-                
+                </p>
               </div>
 
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button type="submit" className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
+                <button
+                  type="submit"
+                  className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
+                >
                   Create an account
                 </button>
                 <p className="mt-4 text-sm text-gray-500 sm:mt-0">
                   Already have an account?&nbsp;
                   <Link href="/auth/login" className="text-gray-700 underline">
-                  Log In
-                </Link>
+                    Log In
+                  </Link>
                   .
                 </p>
               </div>
