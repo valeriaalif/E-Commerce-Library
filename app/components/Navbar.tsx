@@ -231,7 +231,7 @@ const Navbar = () => {
               <li>
                 <a className="justify-between">
                   Science Fiction
-                  <span className="badge">Nuevo</span>
+                  <span className="badge">New</span>
                 </a>
               </li>
               <li>
@@ -314,7 +314,7 @@ const Navbar = () => {
                 <a>Users</a>
               </li>
               <li>
-                <a>Decor</a>
+              <Link href="/products/inventory">Products</Link>
               </li>
             </ul>
           </details>
